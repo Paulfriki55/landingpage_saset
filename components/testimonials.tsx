@@ -129,7 +129,7 @@ const Testimonials = () => {
                     {/* Content */}
                     <blockquote className="text-center mb-8">
                       <p className="text-lg md:text-xl text-neutral-700 leading-relaxed italic">
-                        "{testimonial.content}"
+                        &ldquo;{testimonial.content}&rdquo;
                       </p>
                     </blockquote>
 

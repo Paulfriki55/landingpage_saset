@@ -159,7 +159,7 @@ const SmoothScroll = ({ children }: SmoothScrollProps) => {
         el.removeEventListener('mouseleave', resumeScroll)
       })
     }
-  }, [initLenis, scrollToElement, pauseScroll, resumeScroll])
+  }, [initLenis, scrollToElement, pauseScroll, resumeScroll, lenisRef])
 
   return <>{children}</>
 }

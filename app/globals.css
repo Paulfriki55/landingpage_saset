@@ -1,61 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: 20 95% 40%;
-  --primary-dark: 20 95% 30%;
-  --primary-light: 20 95% 50%;
-  --secondary: 165 60% 40%;
-  --accent: 45 100% 50%;
-  --background: 0 0% 100%;
-  --foreground: 220 20% 16%;
-  --muted: 220 20% 96%;
-  --muted-foreground: 220 10% 40%;
-  --card: 0 0% 100%;
-  --card-foreground: 220 20% 16%;
-  --border: 220 20% 92%;
-  --input: 220 20% 92%;
-  --ring: 20 95% 40%;
-  
-  --scroll: 0;
-  --scroll-progress: 0;
-}
-
-.dark {
-  --primary: 20 95% 40%;
-  --primary-dark: 20 95% 30%;
-  --primary-light: 20 95% 50%;
-  --secondary: 165 60% 40%;
-  --accent: 45 100% 50%;
-  --background: 220 20% 10%;
-  --foreground: 220 20% 96%;
-  --muted: 220 20% 16%;
-  --muted-foreground: 220 10% 60%;
-  --card: 220 20% 12%;
-  --card-foreground: 220 20% 96%;
-  --border: 220 20% 20%;
-  --input: 220 20% 20%;
-  --ring: 20 95% 40%;
-}
-
 @layer base {
+  html {
+    /* Removido scroll-behavior: smooth para evitar conflictos con Lenis */
+    height: auto;
+    /* Optimizaciones para mejor rendimiento */
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    color: #262626;
+    overflow-x: hidden;
+    /* Optimizaciones para smooth scrolling */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary-700 hover:scale-105 transform;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 transform;
+  }
+  
+  .section-padding {
+    @apply py-16 px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
 }
 
-body {
-  overflow-x: hidden;
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-primary {
+    @apply bg-gradient-to-br from-primary to-primary-700;
+  }
+  
+  .scroll-reveal {
+    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+  }
+  
+  .scroll-reveal.revealed {
+    @apply opacity-100 translate-y-0;
+  }
 }
 
-/* Estilos para el scroll suave con Lenis */
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Estilos optimizados para Lenis */
 html.lenis {
   height: auto;
 }
@@ -76,84 +106,41 @@ html.lenis {
   pointer-events: none;
 }
 
-/* Animaciones de texto */
-.char {
-  display: inline-block;
-  transform-origin: center bottom;
+/* Optimizaciones adicionales para smooth scrolling */
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
-.word {
-  display: inline-block;
-  overflow: hidden;
+/* Mejorar rendimiento en elementos con transform */
+* {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Efectos de parallax */
-.parallax {
+/* Optimizar elementos que se animan */
+.smooth-element {
   will-change: transform;
+  transform: translateZ(0);
 }
 
-/* Efectos de hover */
-.hover-lift {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Estilos para enlaces internos */
+.internal-link {
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.hover-lift:hover {
-  transform: translateY(-8px);
+.internal-link:hover {
+  transform: translateY(-2px);
 }
 
-/* Efectos de scroll */
-.is-scrolling .scroll-blur {
-  filter: blur(2px);
-}
-
-/* Animaciones de entrada */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out forwards;
-}
-
-/* Efectos de gradiente animado */
-.gradient-animate {
-  background-size: 200% 200%;
-  animation: gradientMove 8s ease infinite;
-}
-
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Efectos de máscara para revelar contenido */
-.reveal-mask {
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 1s cubic-bezier(0.77, 0, 0.175, 1);
-}
-
-.reveal-mask.revealed {
-  clip-path: inset(0 0 0 0);
-}
-
-/* Efectos de línea */
-.draw-line {
-  position: relative;
-}
-
-.draw-line::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: hsl(var(--primary));
-  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.draw-line:hover::after {
-  width: 100%;
+/* Optimizaciones para dispositivos móviles */
+@media (max-width: 768px) {
+  .lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+  
+  /* Reducir animaciones en móviles para mejor rendimiento */
+  .animate-fade-in {
+    animation-duration: 0.6s;
+  }
 }

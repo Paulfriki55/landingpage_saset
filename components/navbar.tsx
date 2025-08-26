@@ -1,140 +1,137 @@
-"use client"
+'use client'
 
-import { useState, useEffect, useRef } from "react"
-import Link from "next/link"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import { Menu, X } from "lucide-react"
+import { useState, useEffect } from 'react'
+import { Menu, X } from 'lucide-react'
+import Image from 'next/image'
 
-export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const navRef = useRef(null)
-  const logoRef = useRef(null)
-  const menuRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
     }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useGSAP(() => {
-    // Animación inicial del logo
-    gsap.from(logoRef.current, {
-      y: -50,
-      opacity: 0,
-      duration: 1.2,
-      ease: "elastic.out(1, 0.5)",
-    })
-
-    // Animación de los items del menú
-    gsap.from(".nav-item", {
-      opacity: 0,
-      y: -20,
-      stagger: 0.08,
-      duration: 0.6,
-      ease: "power2.out",
-    })
-
-    // Efecto de scroll
-    gsap.to(navRef.current, {
-      scrollTrigger: {
-        trigger: "body",
-        start: "top top",
-        end: "+=500",
-        scrub: 0.3,
-      },
-      backdropFilter: "blur(10px)",
-      backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0)",
-    })
-  }, [scrolled])
-
-  // Animación del menú móvil
-  useGSAP(() => {
-    if (isMenuOpen) {
-      gsap.fromTo(
-        ".mobile-menu-item",
-        {
-          opacity: 0,
-          y: 20,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          stagger: 0.1,
-          duration: 0.4,
-          ease: "power2.out",
-        },
-      )
-    }
-  }, [isMenuOpen])
+  const navItems = [
+    { name: 'Inicio', href: '#inicio' },
+    { name: 'Servicios', href: '#servicios' },
+    { name: 'Proceso', href: '#proceso' },
+    { name: 'Estadísticas', href: '#estadisticas' },
+    { name: 'Testimonios', href: '#testimonios' },
+    { name: 'Contacto', href: '#contacto' },
+  ]
 
   return (
-    <nav
-      ref={navRef}
-      className={`fixed w-full z-50 transition-all duration-500 ${
-        scrolled ? "bg-white/90 backdrop-blur-md shadow-md py-3" : "bg-transparent py-5"
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-primary" ref={logoRef}>
-            SASET
-          </Link>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      scrolled 
+        ? 'bg-white/95 backdrop-blur-md shadow-lg' 
+        : 'bg-transparent'
+    }`}>
+      {/* Main navigation */}
+      <div className="container-custom relative">
+        {/* Minimal Decorative Elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <svg className="absolute top-2 left-4 w-16 h-16 opacity-5" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="5,5"/>
+          </svg>
+          <svg className="absolute top-2 right-4 w-12 h-12 opacity-5" viewBox="0 0 100 100">
+            <polygon points="50,10 90,90 10,90" fill="none" stroke="currentColor" strokeWidth="1"/>
+          </svg>
+        </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
-            {["Inicio", "Servicios", "Proceso", "Testimonios", "Contacto"].map((item, index) => (
-              <Link
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="nav-item text-foreground hover:text-primary transition-colors draw-line"
+        <div className="flex items-center justify-between py-2 relative z-10">
+          {/* Logo */}
+          <div className="flex items-center space-x-3 group">
+            <div className="relative w-20 h-20 transition-transform duration-300 group-hover:scale-110">
+              <Image
+                src="/images/logo_saset.png"
+                alt="SASET Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+              {/* Logo glow effect */}
+              <div className="absolute inset-0 bg-primary/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item, index) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className={`font-medium transition-all duration-300 hover:text-primary relative group ${
+                  scrolled ? 'text-neutral-700' : 'text-white'
+                }`}
               >
-                {item}
-              </Link>
+                {item.name}
+                {/* Underline animation */}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
             ))}
-            <button className="nav-item bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-md transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">
-              Cotizar
+            <button className="btn-primary relative overflow-hidden group">
+              <span className="relative z-10">Cotizar Ahora</span>
+              {/* Button background animation */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-700 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button className="md:hidden text-foreground" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 rounded-lg bg-primary text-white relative overflow-hidden group"
+          >
+            <div className="relative z-10">
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </div>
+            <div className="absolute inset-0 bg-white/20 transform scale-0 group-hover:scale-100 transition-transform duration-200 rounded-lg"></div>
           </button>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div
-            ref={menuRef}
-            className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md shadow-lg py-6 px-4"
-          >
-            <div className="flex flex-col space-y-5">
-              {["Inicio", "Servicios", "Proceso", "Testimonios", "Contacto"].map((item, index) => (
-                <Link
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
-                  className="mobile-menu-item text-foreground hover:text-primary transition-colors text-lg"
-                  onClick={() => setIsMenuOpen(false)}
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="lg:hidden bg-white/95 backdrop-blur-md shadow-lg border-t border-neutral-200 relative overflow-hidden">
+          {/* Simple dots pattern */}
+          <div className="absolute inset-0 opacity-3">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="10" cy="10" r="1" fill="currentColor"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#dots)" />
+            </svg>
+          </div>
+          
+          <div className="container-custom py-2 relative z-10">
+            <div className="flex flex-col space-y-2">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="font-medium text-neutral-700 hover:text-primary transition-all duration-300 py-2 relative group"
                 >
-                  {item}
-                </Link>
+                  {item.name}
+                  <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </a>
               ))}
-              <button
-                className="mobile-menu-item bg-primary text-white px-4 py-3 rounded-md hover:bg-primary-dark transition-colors w-full mt-4"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Cotizar
+              <button className="btn-primary w-full mt-4 relative overflow-hidden group">
+                <span className="relative z-10">Cotizar Ahora</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-700 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
               </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </nav>
   )
 }
+
+export default Navbar

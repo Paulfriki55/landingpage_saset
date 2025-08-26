@@ -1,110 +1,80 @@
-"use client"
+'use client'
 
-import { useRef } from "react"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import Image from "next/image"
+import { useEffect, useRef } from 'react'
+import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
-export default function Hero() {
-  const containerRef = useRef(null)
+const Hero = () => {
+  const heroRef = useRef<HTMLDivElement>(null)
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline()
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in')
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
 
-      tl.from(".hero-title", {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        ease: "power4.out",
-      })
-        .from(
-          ".hero-subtitle",
-          {
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-          },
-          "-=0.4",
-        )
-        .from(
-          ".hero-cta",
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          "-=0.2",
-        )
-        .from(
-          ".hero-image",
-          {
-            scale: 0.8,
-            opacity: 0,
-            duration: 1.2,
-            ease: "back.out(1.7)",
-          },
-          "-=0.8",
-        )
+    if (heroRef.current) {
+      observer.observe(heroRef.current)
+    }
 
-      // Animación de las líneas decorativas
-      gsap.from(".line", {
-        scaleX: 0,
-        transformOrigin: "left center",
-        duration: 1.5,
-        ease: "power3.inOut",
-        stagger: 0.2,
-      })
-    },
-    { scope: containerRef },
-  )
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <section id="inicio" ref={containerRef} className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-      {/* Líneas decorativas */}
-      <div className="absolute inset-0 z-0 opacity-10">
-        <div className="line h-px bg-blue-600 w-full absolute top-1/4"></div>
-        <div className="line h-px bg-blue-600 w-full absolute top-2/4"></div>
-        <div className="line h-px bg-blue-600 w-full absolute top-3/4"></div>
+    <section id="inicio" ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden pt-32">
+      {/* Background Banner */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/banner.jpg"
+          alt="SASET Banner"
+          fill
+          className="object-cover blur-sm"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-12 items-center">
-        <div className="z-10">
-          <h1 className="hero-title text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-            Soluciones globales para <span className="text-blue-600">importación y exportación</span>
+      <div className="container-custom relative z-20">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center px-4 py-2 bg-primary/20 text-white rounded-full text-sm font-medium backdrop-blur-sm border border-white/20 mb-8">
+            <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+            Expertos en Comercio Internacional
+          </div>
+          
+          {/* Main Heading */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-6">
+            <span>Servicios Aduaneros</span>
+            <br />
+            <span className="text-primary-200">Profesionales</span>
+            <br />
+            <span>en Ecuador</span>
           </h1>
-          <p className="hero-subtitle text-lg md:text-xl text-gray-600 mb-8">
-            Conectamos tu negocio con el mundo a través de servicios logísticos integrales y asesoría especializada en
-            comercio internacional.
+          
+          {/* Description */}
+          <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
+            Facilitamos el comercio internacional con soluciones integrales de gestión aduanera, 
+            logística y trámites de importación/exportación.
           </p>
-          <div className="hero-cta flex flex-col sm:flex-row gap-4">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md transition-colors">
-              Solicitar cotización
-            </button>
-            <button className="border border-gray-300 hover:border-blue-600 text-gray-800 font-medium py-3 px-6 rounded-md transition-colors">
-              Conocer servicios
-            </button>
-          </div>
-        </div>
 
-        <div className="hero-image relative z-10 hidden md:block">
-          <div className="relative w-full h-[500px]">
-            <Image
-              src="/placeholder.svg?height=500&width=500"
-              alt="Logística global"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
+          {/* CTA Button */}
+          <button className="bg-primary text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:bg-primary-700 hover:scale-105 transform group relative overflow-hidden">
+            <span className="relative z-10 flex items-center">
+              Solicitar Cotización
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-800 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+          </button>
         </div>
       </div>
-
-      {/* Círculo decorativo */}
-      <div className="absolute -right-40 -bottom-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl z-0"></div>
-      <div className="absolute -left-40 -top-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl z-0"></div>
     </section>
   )
 }
+
+export default Hero

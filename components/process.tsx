@@ -1,133 +1,228 @@
-"use client"
+'use client'
 
-import { useRef } from "react"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useEffect, useRef } from 'react'
+import { 
+  FileText, 
+  Search, 
+  CheckCircle, 
+  Truck, 
+  ArrowRight,
+  Clock,
+  Shield,
+  Users
+} from 'lucide-react'
 
-const steps = [
-  {
-    number: "01",
-    title: "Consulta Inicial",
-    description:
-      "Evaluamos sus necesidades específicas y objetivos comerciales para diseñar una estrategia personalizada.",
-  },
-  {
-    number: "02",
-    title: "Planificación Logística",
-    description: "Desarrollamos un plan detallado que incluye rutas, tiempos y costos optimizados para su operación.",
-  },
-  {
-    number: "03",
-    title: "Documentación",
-    description:
-      "Gestionamos todos los trámites y documentos necesarios para cumplir con las regulaciones internacionales.",
-  },
-  {
-    number: "04",
-    title: "Ejecución",
-    description: "Coordinamos el transporte y seguimiento de su mercancía desde el origen hasta el destino final.",
-  },
-  {
-    number: "05",
-    title: "Entrega y Seguimiento",
-    description: "Garantizamos la entrega segura y proporcionamos informes detallados de toda la operación.",
-  },
-]
+const Process = () => {
+  const sectionRef = useRef<HTMLDivElement>(null)
 
-export default function Process() {
-  const sectionRef = useRef(null)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in')
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
 
-  useGSAP(
-    () => {
-      gsap.registerPlugin(ScrollTrigger)
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
 
-      // Animación del título
-      gsap.from(".process-title", {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      })
+    return () => observer.disconnect()
+  }, [])
 
-      // Animación de la línea de tiempo
-      gsap.from(".timeline-line", {
-        scaleY: 0,
-        transformOrigin: "top center",
-        duration: 1.5,
-        ease: "power3.inOut",
-        scrollTrigger: {
-          trigger: ".process-steps",
-          start: "top 80%",
-          end: "bottom 20%",
-          scrub: 0.5,
-        },
-      })
-
-      // Animación de los pasos
-      gsap.from(".process-step", {
-        x: -50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".process-steps",
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      })
+  const processSteps = [
+    {
+      step: '01',
+      icon: FileText,
+      title: 'Evaluación Inicial',
+      description: 'Analizamos sus necesidades específicas y diseñamos la estrategia óptima para su operación.',
+      details: [
+        'Revisión de documentación',
+        'Análisis de requisitos',
+        'Evaluación de costos',
+        'Propuesta personalizada'
+      ],
+      color: 'from-blue-500 to-blue-600'
     },
-    { scope: sectionRef },
-  )
+    {
+      step: '02',
+      icon: Search,
+      title: 'Gestión Documental',
+      description: 'Preparamos y gestionamos toda la documentación necesaria para el proceso aduanero.',
+      details: [
+        'Preparación de documentos',
+        'Verificación de requisitos',
+        'Coordinación con autoridades',
+        'Seguimiento de trámites'
+      ],
+      color: 'from-green-500 to-green-600'
+    },
+    {
+      step: '03',
+      icon: CheckCircle,
+      title: 'Aprobación Aduanera',
+      description: 'Gestionamos la aprobación y autorización de las autoridades aduaneras correspondientes.',
+      details: [
+        'Presentación de declaraciones',
+        'Gestión de permisos',
+        'Coordinación con SENAE',
+        'Resolución de observaciones'
+      ],
+      color: 'from-purple-500 to-purple-600'
+    },
+    {
+      step: '04',
+      icon: Truck,
+      title: 'Logística y Entrega',
+      description: 'Coordinamos el transporte y entrega final de su mercancía en el destino acordado.',
+      details: [
+        'Coordinación de transporte',
+        'Tracking en tiempo real',
+        'Entrega puerta a puerta',
+        'Confirmación de recepción'
+      ],
+      color: 'from-orange-500 to-orange-600'
+    }
+  ]
+
+  const features = [
+    {
+      icon: Clock,
+      title: 'Tiempo Optimizado',
+      description: 'Procesos eficientes que reducen los tiempos de tránsito hasta en un 40%'
+    },
+    {
+      icon: Shield,
+      title: 'Seguridad Garantizada',
+      description: 'Protección integral de su mercancía con seguros especializados'
+    },
+    {
+      icon: Users,
+      title: 'Acompañamiento 24/7',
+      description: 'Soporte continuo durante todo el proceso con expertos dedicados'
+    }
+  ]
 
   return (
-    <section id="proceso" ref={sectionRef} className="py-20">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="proceso" ref={sectionRef} className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-neutral-50 to-white">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="process-title text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Nuestro Proceso de Trabajo
+          <div className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
+            Nuestro Proceso
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-800 mb-6">
+            Proceso <span className="bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">Simplificado</span> y Eficiente
           </h2>
-          <p className="max-w-2xl mx-auto text-gray-600">
-            Un enfoque estructurado y eficiente para garantizar el éxito de sus operaciones de comercio internacional.
+          <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+            Nuestro método probado garantiza un servicio aduanero sin complicaciones, 
+            con transparencia total y resultados predecibles.
           </p>
         </div>
 
-        <div className="process-steps relative max-w-4xl mx-auto">
-          {/* Línea de tiempo vertical */}
-          <div className="timeline-line absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-blue-600 transform md:translate-x-[-50%]"></div>
+        {/* Process Timeline */}
+        <div className="relative mb-16">
+          {/* Timeline Line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary to-primary-600 hidden lg:block"></div>
+          
+          <div className="space-y-12">
+            {processSteps.map((step, index) => (
+              <div 
+                key={index}
+                className={`flex items-center ${
+                  index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                }`}
+              >
+                {/* Content */}
+                <div className={`flex-1 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12'}`}>
+                  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-neutral-100">
+                    <div className="flex items-center mb-6">
+                      <div className={`w-16 h-16 bg-gradient-to-r ${step.color} rounded-2xl flex items-center justify-center mr-6`}>
+                        <step.icon className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-primary mb-1">Paso {step.step}</div>
+                        <h3 className="text-2xl font-bold text-neutral-800">{step.title}</h3>
+                      </div>
+                    </div>
+                    
+                    <p className="text-neutral-600 mb-6 leading-relaxed">
+                      {step.description}
+                    </p>
+                    
+                    <ul className="space-y-3">
+                      {step.details.map((detail, detailIndex) => (
+                        <li key={detailIndex} className="flex items-center space-x-3">
+                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                          <span className="text-neutral-700">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
 
-          {steps.map((step, index) => (
-            <div
-              key={index}
-              className={`process-step relative flex flex-col md:flex-row items-start mb-16 last:mb-0 ${
-                index % 2 === 0 ? "md:flex-row-reverse" : ""
-              }`}
-            >
-              <div className="md:w-1/2 relative">
-                <div
-                  className={`bg-white p-6 rounded-xl shadow-sm border border-gray-100 ${
-                    index % 2 === 0 ? "md:mr-8" : "md:ml-8"
-                  }`}
-                >
-                  <div className="text-blue-600 font-bold text-4xl mb-3">{step.number}</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
-                  <p className="text-gray-600">{step.description}</p>
+                {/* Timeline Dot */}
+                <div className="hidden lg:flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-lg border-4 border-primary z-10">
+                  <div className="w-4 h-4 bg-primary rounded-full"></div>
+                </div>
+
+                {/* Mobile Step Number */}
+                <div className="lg:hidden flex items-center justify-center w-12 h-12 bg-primary rounded-full text-white font-bold text-lg mb-4">
+                  {step.step}
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
 
-              {/* Punto en la línea de tiempo */}
-              <div className="absolute left-[-10px] md:left-1/2 top-0 w-5 h-5 bg-blue-600 rounded-full transform md:translate-x-[-50%] border-4 border-white"></div>
-
-              <div className="md:w-1/2"></div>
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {features.map((feature, index) => (
+            <div 
+              key={index}
+              className="text-center"
+            >
+              <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <feature.icon className="w-10 h-10 text-primary" />
+              </div>
+              <h4 className="text-xl font-bold text-neutral-800 mb-4">
+                {feature.title}
+              </h4>
+              <p className="text-neutral-600">
+                {feature.description}
+              </p>
             </div>
           ))}
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center">
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-lg border border-neutral-100">
+            <h3 className="text-2xl md:text-3xl font-bold text-neutral-800 mb-4">
+              ¿Tiene preguntas sobre nuestro proceso?
+            </h3>
+            <p className="text-neutral-600 mb-8 max-w-2xl mx-auto">
+              Nuestros expertos están disponibles para explicarle cada paso del proceso 
+              y resolver cualquier duda que pueda tener.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-primary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary-700 hover:scale-105 transform group">
+                Agendar Consulta
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform inline" />
+              </button>
+              <button className="bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white">
+                Ver Casos de Éxito
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   )
 }
+
+export default Process
